@@ -3,6 +3,7 @@
 <div class="container">
   {% if logged_in %}
   <h1>Hello, {{ username }}!</h1>
+  <a href="{{ url_for('google_login') }}" class="btn">Login with Google</a>
   <a href="/cas/logout">Logout</a>
   {% else %}
   <div class="jumbotron">

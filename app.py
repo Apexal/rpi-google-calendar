@@ -1,3 +1,5 @@
+from my_google import create_google_credentials, credentials_to_dict, finish_google_flow, start_google_flow
+import googleapiclient.discovery
 import os
 from flask import Flask, abort, flash, g, session, request, render_template, redirect, url_for
 from flask_cas import CAS, login_required
@@ -58,8 +60,37 @@ def about():
     return render_template('contact.html')
 
 
+@app.route('/google/login')
+@login_required
+def google_login():
+    google_authorization_url, state = start_google_flow()
+    return redirect(google_authorization_url)
+
+
+@app.route('/google/callback')
+@login_required
+def google_callback():
+    state = request.args.get('state')
+    tokens, credentials = finish_google_flow(request.args.get('code'))
+    session['google_credentials'] = credentials_to_dict(credentials)
+    flash('Logged into Google!')
+    return redirect('/')
+
+
+@app.route('/calendar')
+@login_required
+def list_calendars():
+    if 'google_credentials' not in session:
+        return redirect(url_for('google_login'))
+
+    calendar = googleapiclient.discovery.build(
+        'calendar', 'v3', credentials=create_google_credentials(session['google_credentials']))
+
+    return 'We have access to your Google Calendar.'
+
+
 @app.errorhandler(404)
-def page_not_found():
+def page_not_found(e):
     '''Render 404 page.'''
     return render_template('404.html'), 404
 
