@@ -5,6 +5,8 @@ from google.oauth2 import credentials
 import google.oauth2.credentials
 import google_auth_oauthlib.flow
 
+# https://googleapis.github.io/google-api-python-client/docs/dyn/calendar_v3.html
+
 client_config = json.loads(os.environ['GOOGLE_CLIENT_SECRETS_JSON'])
 scopes = ['openid', 'https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/userinfo.email',
           'https://www.googleapis.com/auth/calendar.events']
@@ -47,3 +49,26 @@ def credentials_to_dict(credentials: credentials.Credentials) -> Dict:
             'client_id': credentials.client_id,
             'client_secret': credentials.client_secret,
             'scopes': credentials.scopes}
+
+
+def period_to_calendar_event(course, section, period):
+    return {
+        'recurrence': [],
+        'id': '',
+        'summary': '',  # Event title
+        'location': '',
+        'description': '',  # Can have HTML
+        'colorId': '',
+        'start': {
+            'timeZone': 'America/New_York',
+            'dateTime': ''
+        },
+        'end': {
+            'timeZone': 'America/New_York',
+            'dateTime': ''
+        },
+        'source': {
+            'url': '',
+            'title': 'RPI Course Schedule Importer'
+        }
+    }

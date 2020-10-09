@@ -14,6 +14,7 @@ python-dotenv = "*"
 gunicorn = "*"
 google-api-python-client = "*"
 google-auth-oauthlib = "*"
+redis = "*"
 
 [requires]
 python_version = "3.8"
