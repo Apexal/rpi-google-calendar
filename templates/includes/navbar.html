@@ -1,0 +1,40 @@
+{% macro nav_item(name, path) -%}
+<a class="nav-link {% if request.path == path %}active{% endif %}" href="{{ path }}">{{ name }}</a>
+{%- endmacro %}
+
+{% macro dropdown_item(name, path) -%}
+<a class="dropdown-item {% if request.path == path %}active{% endif %}" href="{{ path }}">{{ name }}</a>
+{%- endmacro %}
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="#">{{ config['APP_TITLE'] }}</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#top-navbar-content">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="top-navbar-content">
+      <div class="navbar-nav mr-auto">
+        {{ nav_item('Home', url_for('index')) }}
+        {{ nav_item('About', url_for('about')) }}
+        {{ nav_item('Form', url_for('form')) }}
+      </div>
+
+      <div class="navbar-nav">
+        {% if logged_in %}
+        <div class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown">
+            Logged in as <b>{{ username }}</b>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right">
+            {{ dropdown_item('Logout', '/cas/logout') }}
+          </div>
+        </div>
+        {% else %}
+        <a class="nav-link" href="/cas/login">Login with CAS</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</nav>
