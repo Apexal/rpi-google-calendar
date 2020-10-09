@@ -49,9 +49,31 @@ def add_template_locals():
 
 
 @app.route('/')
+@login_required
 def index():
     '''The homepage.'''
-    return render_template('index.html')
+    if 'crns' not in session:
+        session['crns'] = []
+    return render_template('index.html', crns=session['crns'])
+
+
+@app.route('/add')
+@login_required
+def add_section():
+    crn = request.args.get('crn')
+    session['crns'] += [crn]
+
+    return redirect('/')
+
+
+@app.route('/remove')
+@login_required
+def remove_section():
+    crn = request.args.get('crn')
+    session['crns'].remove(crn)
+    session.modified = True
+
+    return redirect('/')
 
 
 @app.route('/contact')
