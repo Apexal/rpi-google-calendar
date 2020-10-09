@@ -14,9 +14,20 @@
 
     <ul>
       {% for crn in crns %}
-      <li>{{ crn }} <span><a href="/remove?crn={{ crn }}">X</a></span></li>
+      <h3>{{ crn }} - {{ sections[crn].courseTitle }} - Section {{ sections[crn].id }} <a
+          href="/remove?crn={{ crn }}">X</a></h3>
+      <ul>
+        {% for period in sections[crn].periods %}
+        <li>({{ period.instructionMethod }}) {{ period.type }} {{ period.days }} - {{ period.startTime }} to
+          {{ period.endTime }} with
+          {{ period.instructors|join(',') }} at {{ period.location}}
+        </li>
+        {% endfor %}
+      </ul>
       {% endfor %}
     </ul>
+
+    <a href="#" class="btn btn-primary btn-lg">Add to your Google Calendar</a>
   </div>
 
   {% else %}

@@ -1,3 +1,4 @@
+from db import get_section
 from my_google import create_google_credentials, credentials_to_dict, finish_google_flow, start_google_flow
 import googleapiclient.discovery
 import os
@@ -52,16 +53,30 @@ def add_template_locals():
 @login_required
 def index():
     '''The homepage.'''
-    if 'crns' not in session:
-        session['crns'] = []
-    return render_template('index.html', crns=session['crns'])
+    if 'sections' not in session:
+        session['sections'] = dict()
+
+    print(session['sections'])
+
+    return render_template('index.html', crns=session['sections'].keys(), sections=session['sections'])
 
 
 @app.route('/add')
 @login_required
 def add_section():
     crn = request.args.get('crn')
-    session['crns'] += [crn]
+
+    if crn in session['sections'].keys():
+        flash('Already added that CRN', 'warning')
+    else:
+        # Get section
+        section = get_section('202009', crn)
+        if section is None:
+            # Invalid CRN
+            flash('Invalid crn', 'danger')
+        else:
+            session['sections'][crn] = section
+            session.modified = True
 
     return redirect('/')
 
@@ -70,7 +85,7 @@ def add_section():
 @login_required
 def remove_section():
     crn = request.args.get('crn')
-    session['crns'].remove(crn)
+    del session['sections'][crn]
     session.modified = True
 
     return redirect('/')
