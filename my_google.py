@@ -1,3 +1,4 @@
+from constants import PERIOD_TYPES
 import json
 import os
 from typing import Dict, Tuple
@@ -51,13 +52,15 @@ def credentials_to_dict(credentials: credentials.Credentials) -> Dict:
             'scopes': credentials.scopes}
 
 
-def period_to_calendar_event(course, section, period):
+def period_to_calendar_event(period):
     return {
         'recurrence': [],
         'id': '',
-        'summary': '',  # Event title
-        'location': '',
-        'description': '',  # Can have HTML
+        # Event title
+        'summary': period['courseTitle'] + ' ' + PERIOD_TYPES[period['type']],
+        'location': period['location'],
+        # Can have HTML
+        'description': f'<b>{period["courseSubjectPrefix"]}-{period["courseSubjectCode"]}</b> {period["courseTitle"]} {period["type"]}',
         'colorId': '',
         'start': {
             'timeZone': 'America/New_York',

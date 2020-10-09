@@ -1,5 +1,6 @@
+from constants import PERIOD_TYPES
 from db import get_section
-from my_google import create_google_credentials, credentials_to_dict, finish_google_flow, start_google_flow
+from my_google import create_google_credentials, credentials_to_dict, finish_google_flow, period_to_calendar_event, start_google_flow
 import googleapiclient.discovery
 import os
 from flask import Flask, abort, flash, g, session, request, render_template, redirect, url_for
@@ -45,7 +46,8 @@ def add_template_locals():
     # Add keys here
     return {
         'logged_in': g.logged_in,
-        'username': cas.username
+        'username': cas.username,
+        'period_types': PERIOD_TYPES
     }
 
 
@@ -55,8 +57,6 @@ def index():
     '''The homepage.'''
     if 'sections' not in session:
         session['sections'] = dict()
-
-    print(session['sections'])
 
     return render_template('index.html', crns=session['sections'].keys(), sections=session['sections'])
 
@@ -77,6 +77,7 @@ def add_section():
         else:
             session['sections'][crn] = section
             session.modified = True
+            print(period_to_calendar_event(section['periods'][0]))
 
     return redirect('/')
 

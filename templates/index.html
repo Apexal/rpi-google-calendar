@@ -14,13 +14,20 @@
 
     <ul>
       {% for crn in crns %}
-      <h3>{{ crn }} - {{ sections[crn].courseTitle }} - Section {{ sections[crn].id }} <a
+      <h3>{{ crn }} - <input type="text" value="{{ sections[crn].courseTitle }}"> - Section {{ sections[crn].id }} <a
           href="/remove?crn={{ crn }}">X</a></h3>
       <ul>
         {% for period in sections[crn].periods %}
-        <li>({{ period.instructionMethod }}) {{ period.type }} {{ period.days }} - {{ period.startTime }} to
-          {{ period.endTime }} with
-          {{ period.instructors|join(',') }} at {{ period.location}}
+        <li>({{ period.instructionMethod }})
+          <select>
+            {% for ptype in period_types %}
+            <option value="{{ ptype }}" {% if ptype == period.type %}selected{% endif %}>{{ period_types[ptype] }}
+            </option>
+            {% endfor %}
+          </select>
+          {{ period.days }} - <input type="time" value="{{ period.startTime }}"> to
+          <input type="time" value="{{ period.endTime }}" with <input type="text"
+            value="{{ period.instructors|join(', ') }}"> at <input type="text" value="{{ period.location}}">
         </li>
         {% endfor %}
       </ul>
