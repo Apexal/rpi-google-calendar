@@ -18,7 +18,7 @@ cas = CAS(app, '/cas')
 app.secret_key = os.environ.get('FLASK_SECRET_KEY')
 
 # Used in templates
-app.config['APP_TITLE'] = 'Flask + CAS'
+app.config['APP_TITLE'] = 'RPI Schedule Google Calendar Importer'
 
 # Must be set to this to use RPI CAS
 app.config['CAS_SERVER'] = 'https://cas-auth.rpi.edu/cas'
@@ -52,29 +52,10 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/form', methods=['GET', 'POST'])
-@login_required
-def form():
-    '''Sample form route.'''
-
-    if request.method == 'GET':
-        # Render form page on GET request
-        return render_template('form.html')
-    else:
-        # Grab form values on POST request
-        if 'name' in request.form and request.form['name'] != '':
-            name = request.form['name']
-            flash('Hello, ' + name, 'info')
-        else:
-            abort(400)
-
-        return redirect(url_for('form'))
-
-
-@app.route('/about')
+@app.route('/contact')
 def about():
-    '''The about page.'''
-    return render_template('about.html')
+    '''Page with my contact info.'''
+    return render_template('contact.html')
 
 
 @app.errorhandler(404)
